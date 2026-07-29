@@ -1,28 +1,20 @@
-<h2>Available Courses</h2>
+<div class="course-list-container">
+  <h2>Available Courses</h2>
 
-<!-- Show while loading -->
-<p *ngIf="isLoading">Loading courses...</p>
+  <!-- Search Input -->
+  <input 
+    type="text" 
+    [(ngModel)]="searchTerm" 
+    (input)="onSearchChange()" 
+    placeholder="Search courses..." 
+    class="search-box" />
 
-<!-- Show course list after loading -->
-<div *ngIf="!isLoading">
-
-  <div *ngIf="courses.length > 0; else noCourses">
-
-    <app-course-card
-      *ngFor="let c of courses; let i = index; trackBy: trackByCourseId"
-      appHighlight="lightblue"
-      [course]="c"
-      (enrollRequested)="onEnroll($event)">
+  <!-- Course Card Loop -->
+  <div class="courses-grid">
+    <app-course-card 
+      *ngFor="let course of courses; trackBy: trackByCourseId" 
+      [course]="course"
+      (click)="viewCourseDetails(course.id)">
     </app-course-card>
-
-    <p *ngIf="selectedCourseId">
-      Selected Course ID: {{ selectedCourseId }}
-    </p>
-
   </div>
-
-  <ng-template #noCourses>
-    <p>No courses available.</p>
-  </ng-template>
-
 </div>
