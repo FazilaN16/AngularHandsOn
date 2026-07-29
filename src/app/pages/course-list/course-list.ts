@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CourseCard } from '../../components/course-card/course-card';
 import { Highlight } from '../../directives/highlight';
+import { CourseService } from '../../services/course';
 
 @Component({
   selector: 'app-course-list',
@@ -13,46 +14,13 @@ import { Highlight } from '../../directives/highlight';
 export class CourseList implements OnInit{
   isLoading = true;
 
-  courses = [
-  {
-    id: 1,
-    name: 'Angular Basics',
-    code: 'ANG101',
-    credits: 4,
-    gradeStatus: 'passed'
-  },
-  {
-    id: 2,
-    name: 'Java Programming',
-    code: 'JAVA201',
-    credits: 3,
-    gradeStatus: 'failed'
-  },
-  {
-    id: 3,
-    name: 'Database Systems',
-    code: 'DB301',
-    credits: 4,
-    gradeStatus: 'pending'
-  },
-  {
-    id: 4,
-    name: 'Web Development',
-    code: 'WEB401',
-    credits: 3,
-    gradeStatus: 'passed'
-  },
-  {
-    id: 5,
-    name: 'Data Structures',
-    code: 'DS501',
-    credits: 4,
-    gradeStatus: 'pending'
-  }
-];
+ courses: any[] = [];
 
   selectedCourseId: number | null = null;
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+  private cdr: ChangeDetectorRef,
+  private courseService: CourseService
+) {}
 
   onEnroll(courseId: number): void {
     console.log('Enrolling in course: ' + courseId);
@@ -65,6 +33,7 @@ trackByCourseId(index: number, course: any): number {
 }
   
 ngOnInit(): void {
+  this.courses = this.courseService.getCourses();
   setTimeout(() => {
     this.isLoading = false;
     this.cdr.detectChanges();

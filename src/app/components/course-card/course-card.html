@@ -35,14 +35,13 @@
 
   </div>
 
- <button
-  (click)="isEnrolled = true; enrollRequested.emit(course.id)">
-  Enroll
+ <button (click)="toggleEnrollment()">
+  {{ isEnrolled() ? 'Unenroll' : 'Enroll' }}
 </button>
+
 <button (click)="isExpanded = !isExpanded">
   {{ isExpanded ? 'Hide Details' : 'Show Details' }}
 </button>
-
 
 
 </div>

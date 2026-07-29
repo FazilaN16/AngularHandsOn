@@ -1,9 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { EnrollmentService } from '../../services/enrollment';
+import { Course } from '../../models/course.model';
 
 @Component({
   selector: 'app-student-profile',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './student-profile.html',
   styleUrl: './student-profile.css',
 })
-export class StudentProfile {}
+export class StudentProfile implements OnInit {
+  enrolledCourses: Course[] = [];
+
+  constructor(private enrollmentService: EnrollmentService) {}
+
+  ngOnInit(): void {
+    // Fetch the list of enrolled courses when the profile loads
+    this.enrolledCourses = this.enrollmentService.getEnrolledCourses();
+  }
+
+  // Optional: if you want it to update dynamically when navigating back and forth
+  ionViewWillEnter() {
+    this.enrolledCourses = this.enrollmentService.getEnrolledCourses();
+  }
+}
