@@ -11,6 +11,7 @@ import {
   Validators
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CourseService } from '../../services/course';
 
 function noCourseCode(control: AbstractControl): ValidationErrors | null {
   const value = control.value;
@@ -53,7 +54,10 @@ export class ReactiveEnrollment implements OnInit {
 
   enrollForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+ constructor(
+  private fb: FormBuilder,
+  private courseService: CourseService
+) {}
 
   ngOnInit(): void {
 
@@ -93,14 +97,21 @@ export class ReactiveEnrollment implements OnInit {
     this.additionalCourses.removeAt(index);
   }
 
-  onSubmit(): void {
+ onSubmit(): void {
 
-    // enrollForm.value returns only enabled controls.
-    // enrollForm.getRawValue() returns all controls, including disabled ones.
-
-    console.log('Form Value:', this.enrollForm.value);
-    console.log('Raw Value:', this.enrollForm.getRawValue());
-
+  if (this.enrollForm.invalid) {
+    return;
   }
+
+  this.courseService.createCourse(this.enrollForm.value).subscribe({
+    next: (response) => {
+      console.log('Course created successfully!', response);
+    },
+    error: (err) => {
+      console.error('Error creating course:', err);
+    }
+  });
+
+}
 
 }

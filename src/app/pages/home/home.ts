@@ -23,10 +23,14 @@ export class Home implements OnInit, OnDestroy {
     this.message = 'Enrollment opened!';
   }
 
-  ngOnInit(): void {
-    this.courseCount = this.courseService.getCourses().length;
-    console.log('HomeComponent initialised — courses loaded');
-  }
+ ngOnInit(): void {
+  this.courseService.getCourses().subscribe({
+    next: (courses) => {
+      this.courseCount = courses.length;
+      console.log('HomeComponent initialised — courses loaded');
+    }
+  });
+}
 
   ngOnDestroy(): void {
     console.log('HomeComponent destroyed');

@@ -5,6 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { CourseCard } from '../../components/course-card/course-card';
 import { Highlight } from '../../directives/highlight';
 import { CourseService } from '../../services/course';
+import { Subject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { EnrollmentService } from '../../services/enrollment';
 
 @Component({
   selector: 'app-course-list',
@@ -15,35 +18,64 @@ import { CourseService } from '../../services/course';
 })
 export class CourseList implements OnInit {
   isLoading = true;
+  errorMessage = '';
   courses: any[] = [];
   selectedCourseId: number | null = null;
+  private courseSelection$ = new Subject<number>();
+students: any[] = [];
   searchTerm: string = '';
 
   constructor(
-    private cdr: ChangeDetectorRef,
-    private courseService: CourseService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  private cdr: ChangeDetectorRef,
+  private courseService: CourseService,
+  private enrollmentService: EnrollmentService,
+  private router: Router,
+  private route: ActivatedRoute
+) {}
 
   ngOnInit(): void {
-    this.courses = this.courseService.getCourses();
+    this.courseService.getCourses().subscribe({
+  next: (courses) => {
+    this.courses = courses;
+  },
+  error: (err) => {
+    this.errorMessage = err.message;
+  },
+  complete: () => {
+    this.isLoading = false;
+  }
+});
+
+this.courseSelection$
+  .pipe(
+    switchMap(courseId =>
+      this.enrollmentService.getStudentsByCourse(courseId)
+    )
+  )
+  .subscribe({
+    next: (students) => {
+      this.students = students;
+      console.log('Students loaded:', students);
+    }
+  });
+  // switchMap cancels the previous HTTP request when a new course is selected,
+// preventing outdated responses from updating the UI.
 
     // Read search query parameter from URL on load and changes
     this.route.queryParamMap.subscribe(params => {
       this.searchTerm = params.get('search') || '';
     });
 
-    setTimeout(() => {
-      this.isLoading = false;
-      this.cdr.detectChanges();
-    }, 1500);
+    
   }
 
   onEnroll(courseId: number): void {
-    console.log('Enrolling in course: ' + courseId);
-    this.selectedCourseId = courseId;
-  }
+  console.log('Enrolling in course: ' + courseId);
+
+  this.selectedCourseId = courseId;
+
+  this.courseSelection$.next(courseId);
+}
 
   // Navigate to course detail page when a card is clicked
   viewCourseDetails(courseId: number): void {

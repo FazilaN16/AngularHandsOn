@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Course } from '../models/course.model';
 import { CourseService } from './course';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,10 @@ export class EnrollmentService {
 
   private enrolledCourseIds: number[] = [];
 
-  constructor(private courseService: CourseService) {}
+  constructor(
+  private courseService: CourseService,
+  private http: HttpClient
+) {}
 
   enroll(courseId: number): void {
     if (!this.enrolledCourseIds.includes(courseId)) {
@@ -31,4 +36,10 @@ export class EnrollmentService {
       .map(id => this.courseService.getCourseById(id))
       .filter((course): course is Course => course !== undefined);
   }
+
+  getStudentsByCourse(courseId: number): Observable<any[]> {
+  return this.http.get<any[]>(
+    `http://localhost:3000/students?courseId=${courseId}`
+  );
+}
 }
