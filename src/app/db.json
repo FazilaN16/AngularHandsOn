@@ -1,0 +1,60 @@
+{
+  "courses": [
+    {
+      "id": "1",
+      "title": "Angular Fundamentals",
+      "description": "Learn components, directives, and routing.",
+      "credits": 4
+    },
+    {
+      "id": "2",
+      "title": "Advanced RxJS & HTTP",
+      "description": "Master observables, operators, and interceptors.",
+      "credits": 3
+    },
+    {
+      "id": "3",
+      "title": "Full-Stack Web Dev with MERN",
+      "description": "MongoDB, Express, React, and Node.js.",
+      "credits": 5
+    },
+    {
+      "studentName": "John",
+      "studentEmail": "john@example.com",
+      "courseId": "CS301",
+      "preferredSemester": "Odd",
+      "agreeToTerms": true,
+      "additionalCourses": [],
+      "id": "Y2Thhl52dZk"
+    },
+    {
+      "studentName": "John",
+      "studentEmail": "john@example.com",
+      "courseId": "CS301",
+      "preferredSemester": "Odd",
+      "agreeToTerms": true,
+      "additionalCourses": [],
+      "id": "KSKCjBPbug4"
+    }
+  ],
+  "students": [
+    {
+      "id": "101",
+      "name": "Fazila",
+      "email": "fazila@example.com"
+    },
+    {
+      "id": "102",
+      "name": "Aditya",
+      "email": "aditya@example.com"
+    }
+  ],
+  "enrollments": [
+    {
+      "id": "1",
+      "courseId": "1",
+      "studentId": "101"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
